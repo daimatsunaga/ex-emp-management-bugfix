@@ -77,6 +77,12 @@ public class AdministratorController {
 		if(result.hasErrors()) {
 			return "administrator/insert";
 		}
+		
+		if(!(form.getPassword().equals(form.getConfirmationPassword()))) {
+			model.addAttribute("notEqualsPsss", "パスワードと確認用パスワードが一致しません");
+			return "administrator/insert";
+		}
+		
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
@@ -119,6 +125,8 @@ public class AdministratorController {
 			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return toLogin();
 		}
+		//ログイン情報をセッションスコープに格納
+		session.setAttribute("administrator", administrator);
 		return "forward:/employee/showList";
 	}
 	
